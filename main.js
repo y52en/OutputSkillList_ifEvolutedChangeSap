@@ -32,9 +32,8 @@ async function main() {
             new Date()
         )}`
     );
-    let SkillList_ifEvolutedChangeSap = [];
 
-    const SkillData_TTK = (() => {
+    const TTKlist_filtered = (() => {
         let TTK_list = [];
         for (let i = 0; i < SkillData.length; i++) {
             //\d{8}で 通常攻撃などを除去、0$でTTK抽出、^SEで星3除去
@@ -48,26 +47,27 @@ async function main() {
         return TTK_list;
     })();
 
-    for (let i = 0; i < SkillData_TTK.length; i = i + 2) {
-        // TTK_list[i]["sap"] !== TTK_list[i+1]["sap"]でなぜか単純比較できないのでStiring変換
-        const tmp = (x) => JSON.stringify(SkillData_TTK[x]["sap"]);
+    let TTKList_ifEvolutedChangeSap = [];
+    for (let i = 0; i < TTKlist_filtered.length; i = i + 2) {
+        // TTKlist_filtered[i]["sap"] !== TTKlist_filtered[i+1]["sap"]でなぜか単純比較できないのでStiring変換
+        const tmp = (x) => JSON.stringify(TTKlist_filtered[x]["sap"]);
 
         if (tmp(i) !== tmp(i + 1)) {
-            SkillList_ifEvolutedChangeSap.push(SkillData_TTK[i]);
+            TTKList_ifEvolutedChangeSap.push(TTKlist_filtered[i]);
         }
     }
 
-    const SkillList_ifEvolutedChangeSap_toHTML = (() => {
+    const TTKList_ifEvolutedChangeSap_toHTML = (() => {
         let output;
-        output = JSON.stringify(SkillList_ifEvolutedChangeSap);
+        output = JSON.stringify(TTKList_ifEvolutedChangeSap);
         output = output.replace(/,{"m_ID":/g, ',<br><br>{"m_ID":');
         return output;
     })();
 
     document
         .querySelector("#output")
-        .insertAdjacentHTML("beforeend", SkillList_ifEvolutedChangeSap_toHTML);
-    console.log(SkillList_ifEvolutedChangeSap);
+        .insertAdjacentHTML("beforeend", TTKList_ifEvolutedChangeSap_toHTML);
+    console.log(TTKList_ifEvolutedChangeSap);
 }
 
 main();
